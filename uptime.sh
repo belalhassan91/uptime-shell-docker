@@ -25,6 +25,7 @@ SLACK_CHAN=( $(cat slack.json | jq -r '.channel') )
 #echo $SLACK_CHAN
 
 i=0
+status_last=1
 for service in "${services_url[@]}"
 do
         port=${services_port[$i]}
@@ -33,9 +34,21 @@ do
         status=$( curl  -s -o /dev/null -w "%{http_code}" ${url} )
         if [[ $status != 200 ]]
         then
+                SLACK_COLOR=#FF0000
                 send_slack '['$env']': $service is down.
+                echo 0 > /$service.txt
         fi
 
+        if [ -f "/$service.txt" ]
+        then
+                status_last=$(cat /$service.txt )
+        fi
+
+        if [[ $status == 200 ]] && [[ $status_last == 0 ]]
+        then
+                SLACK_COLOR=#00FF00
+                send_slack '['$env']': $service is up.
+                echo 1 > /$service.txt
+        fi
         i=$((i+1))
 done
-
