@@ -15,7 +15,7 @@ send_slack() {
 
         #URL=
 
-        curl -X POST --data-urlencode 'payload={"channel": "'${SLACK_CHAN}'", "username": "'${SLACK_USERNAME}'", "attachments": [{"color": "#FF0000","blocks": [{"type": "section","text": {"type": "plain_text","text": "'"${*}"'","emoji": true    }}]}]}' ${URL} > /dev/null 2>&1
+        curl -X POST --data-urlencode 'payload={"channel": "'${SLACK_CHAN}'", "username": "'${SLACK_USERNAME}'", "attachments": [{"color": "'${SLACK_COLOR}'","blocks": [{"type": "section","text": {"type": "plain_text","text": "'"${*}"'","emoji": true    }}]}]}' ${URL} > /dev/null 2>&1
 }
 
 URL=( $(cat slack.json | jq -r '.webhook_url') )
