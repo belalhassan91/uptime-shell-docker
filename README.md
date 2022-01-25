@@ -23,7 +23,8 @@ copy the following example
 [
   {
         "url": "nginx",
-        "port": 80
+        "port": 80,
+        "path": "/"
   }
 ]
 ```

@@ -1,6 +1,7 @@
 #!/bin/bash
 services_url=( $(cat services.json | jq -r '.[].url') )
 services_port=( $(cat services.json | jq -r '.[].port') )
+services_path=( $(cat services.json | jq -r '.[].path') )
 
 send_slack() {
 
@@ -27,7 +28,8 @@ i=0
 for service in "${services_url[@]}"
 do
         port=${services_port[$i]}
-        url="http://$service:$port"
+        path=${services_path[$i]}
+        url="http://$service:$port$path"
         status=$( curl  -s -o /dev/null -w "%{http_code}" ${url} )
         if [[ $status != 200 ]]
         then
